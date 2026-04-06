@@ -13,30 +13,20 @@ ENV AOM=v3.13.2 \
     FONTCONFIG=2.16.0 \
     FREETYPE=2.13.3 \
     FRIBIDI=1.0.16 \
-    
-    
     KVAZAAR=2.3.1 \
     LAME=3.100 \
     LIBASS=0.17.3 \
     LIBDAV1D=1.5.3 \
-
-
-
-
     LIBSRT=1.5.4 \
     LIBVIDSTAB=1.1.1 \
     LIBWEBP=1.5.0 \
-
-
     OGG=1.3.5 \
     OPENCOREAMR=0.1.6 \
     OPENJPEG=2.5.3 \
     OPUS=1.5.2 \
-
     THEORA=1.1.1 \
     VORBIS=1.3.7 \
     VPX=1.15.0 \
-
     X265=3.4 \
     XVID=1.3.7 \
     ZIMG=3.0.5
