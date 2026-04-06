@@ -7,9 +7,9 @@ ENV DEBIAN_FRONTEND="noninteractive"
 ENV MAKEFLAGS="-j4" \
     PATH="/root/.cargo/bin:${PATH}"
 
-ENV AOM=v3.12.0 \
+ENV AOM=v3.13.2 \
     FDKAAC=2.0.3 \
-    FFMPEG_HARD=7.1.1 \
+    FFMPEG_HARD=8.1 \
     FONTCONFIG=2.16.0 \
     FREETYPE=2.13.3 \
     FRIBIDI=1.0.16 \
@@ -18,13 +18,13 @@ ENV AOM=v3.12.0 \
     KVAZAAR=2.3.1 \
     LAME=3.100 \
     LIBASS=0.17.3 \
-    LIBDAV1D=1.5.1 \
-    LIBDOVI=2.2.0 \
+    LIBDAV1D=1.5.3 \
+    LIBDOVI=3.3.2 \
     LIBDRM=2.4.124 \
     LIBGL=1.7.0 \
-    LIBPLACEBO=7.349.0 \
+    LIBPLACEBO=7.360.1 \
     LIBSRT=1.5.4 \
-    LIBVA=2.22.0 \
+    LIBVA=2.23.0 \
     LIBVDPAU=1.5 \
     LIBWEBP=1.5.0 \
     NVCODEC=11.1.5.3 \
@@ -36,7 +36,7 @@ ENV AOM=v3.12.0 \
     THEORA=1.1.1 \
     VORBIS=1.3.7 \
     VPX=1.15.0 \
-    VULKANSDK=vulkan-sdk-1.4.304.1 \
+    VULKANSDK=vulkan-sdk-1.4.341.1 \
     X265=4.1 \
     XVID=1.3.7 \
     ZIMG=3.0.5
@@ -618,18 +618,23 @@ RUN if [ -z ${FFMPEG_VERSION+x} ]; then \
 RUN cd /tmp/ffmpeg && \
     ./configure \
     --ld=clang++ \
+    --enable-static \
+    --disable-shared \
     --disable-debug \
     --disable-doc \
     --disable-ffplay \
+    --enable-amf \
     --enable-cuda \
     --enable-cuda-llvm \
     --enable-cuvid \
     --enable-ffprobe \
-    --enable-fontconfig \
+    --enable-filter=nnedi3 \
+    --enable-filter=znedi3 \
     --enable-gpl \
     --enable-libaom \
-    --enable-libdav1d \
     --enable-libass \
+    --enable-libdav1d \
+    --enable-libdovi \
     --enable-libfdk_aac \
     --enable-libfontconfig \
     --enable-libfreetype \
@@ -649,9 +654,9 @@ RUN cd /tmp/ffmpeg && \
     --enable-libvpl \
     --enable-libvpx \
     --enable-libwebp \
-    --enable-libxml2 \
     --enable-libx264 \
     --enable-libx265 \
+    --enable-libxml2 \
     --enable-libxvid \
     --enable-libzimg \
     --enable-nonfree \
@@ -659,15 +664,14 @@ RUN cd /tmp/ffmpeg && \
     --enable-nvenc \
     --enable-opencl \
     --enable-openssl \
-    --enable-small \
+    --enable-runtime-cpudetect \
     --enable-stripping \
     --enable-vaapi \
     --enable-vdpau \
     --enable-version3 \
     --enable-vulkan \
-    --extra-libs=-ldl \
-    --extra-libs=-lpthread && \
-    make
+    --extra-libs="-lpthread -lm -ldl" && \
+    make -j$(nproc)
 
 RUN /usr/local/lib/rustlib/uninstall.sh && \
     ldconfig && \

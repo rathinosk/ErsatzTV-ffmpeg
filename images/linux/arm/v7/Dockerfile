@@ -6,28 +6,40 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS devel-base
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV MAKEFLAGS="-j4"
 
-ENV AOM=v3.12.0 \
+
+ENV AOM=v3.13.2 \
     FDKAAC=2.0.3 \
-    FFMPEG_HARD=7.1.1 \
+    FFMPEG_HARD=8.1 \
     FONTCONFIG=2.16.0 \
     FREETYPE=2.13.3 \
     FRIBIDI=1.0.16 \
+
+
     KVAZAAR=2.3.1 \
     LAME=3.100 \
     LIBASS=0.17.3 \
-    LIBDAV1D=1.5.1 \
+    LIBDAV1D=1.5.3 \
+
+
+
+
     LIBSRT=1.5.4 \
-    LIBVIDSTAB=1.1.0 \
+    LIBVIDSTAB=1.1.1 \
     LIBWEBP=1.5.0 \
+
+
     OGG=1.3.5 \
     OPENCOREAMR=0.1.6 \
     OPENJPEG=2.5.3 \
     OPUS=1.5.2 \
+
     THEORA=1.1.1 \
     VORBIS=1.3.7 \
     VPX=1.15.0 \
-    X265=3.4 \
-    XVID=1.3.7 
+
+    X265=4.1 \
+    XVID=1.3.7 \
+    ZIMG=3.0.5
 
 RUN apt-get -yqq update && \ 
     apt-get -yq --no-install-recommends install -y \
@@ -384,6 +396,20 @@ RUN cd /tmp/xvid/build/generic && \
     make && \
     make install
 
+# zimg
+RUN mkdir -p /tmp/zimg && \
+    git clone \
+    --branch release-${ZIMG} --depth 1 \
+    https://github.com/sekrit-twc/zimg.git \
+    /tmp/zimg
+RUN cd /tmp/zimg && \
+    ./autogen.sh && \
+    ./configure \
+    --disable-static \
+    --enable-shared && \
+    make && \
+    make install
+
 # ffmpeg
 RUN if [ -z ${FFMPEG_VERSION+x} ]; then \
     FFMPEG=${FFMPEG_HARD}; \
@@ -425,6 +451,7 @@ RUN cd /tmp/ffmpeg && \
     --enable-libx264 \
     --enable-libx265 \
     --enable-libxvid \
+    --enable-libzimg \
     --enable-nonfree \
     --enable-openssl \
     --enable-small \
